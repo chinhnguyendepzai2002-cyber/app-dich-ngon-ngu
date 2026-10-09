@@ -1,7 +1,7 @@
 import streamlit as st
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-import os
+import time
 
 st.set_page_config(page_title="App Dịch Ngôn Ngữ Thông Minh", page_icon="🇻🇳", layout="centered")
 
@@ -14,7 +14,10 @@ text_to_translate = st.text_area("Nhập văn bản cần dịch:", placeholder=
 if st.button("Dịch sang Tiếng Việt", type="primary"):
     if text_to_translate.strip() != "":
         try:
-            # Sử dụng GoogleTranslator với cơ chế tự động phát hiện ngôn ngữ nguồn (source='auto')
+            # Thêm thời gian chờ nhẹ để tránh bị Google chặn do gửi request quá nhanh
+            time.sleep(0.5)
+            
+            # Khởi tạo translator
             translator = GoogleTranslator(source='auto', target='vi')
             translated_text = translator.translate(text_to_translate)
             
@@ -28,6 +31,6 @@ if st.button("Dịch sang Tiếng Việt", type="primary"):
             st.audio(audio_file, format='audio/mp3')
             
         except Exception as e:
-            st.error(f"Đã xảy ra lỗi: {e}")
+            st.error(f"Đã xảy ra lỗi: {e}. Bạn hãy thử lại sau vài giây nhé!")
     else:
             st.warning("Vui lòng nhập văn bản cần dịch!")
